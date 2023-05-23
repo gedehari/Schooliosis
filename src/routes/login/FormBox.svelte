@@ -1,13 +1,59 @@
 <script lang="ts">
-    export let title: string;
+    import { browser } from "$app/environment";
+    import { onMount } from "svelte";
+    import voca from "voca";
+
+    const LAST_IDENTITY_KEY = "__schooliosis_lastIdentity";
+
+    export let type: "login" | "register" = "login";
+
+    let idType: string;
+
+    onMount(() => {
+        const value = localStorage.getItem(LAST_IDENTITY_KEY);
+        if (value) {
+            idType = value
+        }
+    });
+
+    function onIdentityChange() {
+        localStorage.setItem(LAST_IDENTITY_KEY, idType);
+    }
+
+    function onSubmit() {
+        window.alert("Boo!");
+    }
 </script>
 
-<div class="form-box">
-    <h1>{title}</h1>
-    <form method="post">
-        <slot></slot>
-    </form>
-</div>
+{#if browser}
+    <div class="form-box">
+        <h1>{voca.titleCase(`${idType} ${type}`)}</h1>
+        <form method="post" on:submit|preventDefault={onSubmit}>
+            <select name="identityType" bind:value={idType} on:change={onIdentityChange}>
+                <option value="student">Student</option>
+                <option value="teacher">Teacher</option>
+            </select>
+
+            <label for="id">{idType == "teacher" ? "NIK" : "NIS"}</label>
+            <input type="text" name="id" placeholder="" required />
+
+            {#if type == "register"}
+                <label for="email">Email</label>
+                <input type="email" name="email" placeholder="" />
+            {/if}
+
+            <label for="password">Password</label>
+            <input type="password" name="password" placeholder="" required />
+
+            {#if type == "register"}
+                <label for="confirmPassword">Confirm Password</label>
+                <input type="password" name="confirmPassword" placeholder="" required />
+            {/if}
+
+            <button type="submit">{voca.titleCase(type)}</button>
+        </form>
+    </div>
+{/if}
 
 <style>
     :global(.form-box) {
@@ -54,6 +100,7 @@
             rgb(92, 121, 255) 91.1%
         );
         font-size: 18px;
+        cursor: pointer;
     }
 
     :global(.form-box form button:hover) {

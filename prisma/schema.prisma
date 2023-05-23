@@ -1,0 +1,66 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum JenisKelamin {
+  Laki
+  Perempuan
+}
+
+enum Agama {
+  Islam
+  Kristen
+  Katolik
+  Hindu
+  Budha
+  Konghucu
+}
+
+enum IdentityType {
+  Siswa
+  Guru
+}
+
+model Siswa {
+  nis           Int          @id
+  nama          String       @db.VarChar(255)
+  tempatLahir   String       @db.VarChar(32)
+  tanggalLahir  DateTime
+  jenisKelamin  JenisKelamin
+  agama         Agama
+  alamat        String
+  namaAyah      String       @db.VarChar(255)
+  pekerjaanAyah String?      @db.VarChar(32)
+  namaIbu       String       @db.VarChar(255)
+  pekerjaanIbu  String?      @db.VarChar(32)
+  Credential    Credential?
+}
+
+model Guru {
+  nik          Int          @id
+  nama         String       @db.VarChar(255)
+  tempatLahir  String       @db.VarChar(32)
+  tanggalLahir DateTime
+  jenisKelamin JenisKelamin
+  agama        Agama
+  alamat       String
+  Credential   Credential?
+}
+
+model Credential {
+  id           Int          @id @default(autoincrement())
+  identityType IdentityType
+  siswa        Siswa?       @relation(fields: [siswaNis], references: [nis])
+  siswaNis     Int?         @unique
+  guru         Guru?        @relation(fields: [guruNik], references: [nik])
+  guruNik      Int?         @unique
+  passwordHash String       @db.VarChar(255)
+}
