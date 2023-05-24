@@ -1,23 +1,28 @@
 <script lang="ts">
     import { browser } from "$app/environment";
+    import FormInput from "$lib/form/FormInput.svelte";
     import { onMount } from "svelte";
     import voca from "voca";
 
     const LAST_IDENTITY_KEY = "__schooliosis_lastIdentity";
 
     export let type: "login" | "register" = "login";
+    export let errorMessage: string | undefined = undefined;
 
-    let idType: string;
+    let identityType: string;
 
     onMount(() => {
-        const value = localStorage.getItem(LAST_IDENTITY_KEY);
-        if (value) {
-            idType = value
-        }
+        identityType = localStorage.getItem(LAST_IDENTITY_KEY) || "student";
     });
 
     function onIdentityChange() {
-        localStorage.setItem(LAST_IDENTITY_KEY, idType);
+        localStorage.setItem(LAST_IDENTITY_KEY, identityType);
+    }
+
+    function onIdInputBlur() {
+        if (type == "register") {
+            window.alert("TODO: add identity checking...");
+        }
     }
 
     function onSubmit() {
@@ -25,89 +30,93 @@
     }
 </script>
 
-{#if browser}
-    <div class="form-box">
-        <h1>{voca.titleCase(`${idType} ${type}`)}</h1>
-        <form method="post" on:submit|preventDefault={onSubmit}>
-            <select name="identityType" bind:value={idType} on:change={onIdentityChange}>
-                <option value="student">Student</option>
-                <option value="teacher">Teacher</option>
-            </select>
+<main class="{`form-signin w-100 m-auto ${browser ? 'visible' : 'invisible'}`}">
+    <form method="post">
+        <div class="btn-group d-flex mb-3" role="group">
+            <input
+                type="radio"
+                class="btn-check"
+                name="identityType"
+                id="student"
+                value="student"
+                bind:group="{identityType}"
+                on:change="{onIdentityChange}"
+            />
+            <label class="btn btn-outline-primary" for="student">Student</label>
 
-            <label for="id">{idType == "teacher" ? "NIK" : "NIS"}</label>
-            <input type="text" name="id" placeholder="" required />
+            <input
+                type="radio"
+                class="btn-check"
+                name="identityType"
+                id="teacher"
+                value="teacher"
+                bind:group="{identityType}"
+                on:change="{onIdentityChange}"
+            />
+            <label class="btn btn-outline-primary" for="teacher">Teacher</label>
+        </div>
 
-            {#if type == "register"}
-                <label for="email">Email</label>
-                <input type="email" name="email" placeholder="" />
-            {/if}
+        <h3 class="text-center mb-3">{voca.titleCase(type)}</h3>
 
-            <label for="password">Password</label>
-            <input type="password" name="password" placeholder="" required />
+        {#if errorMessage}
+            <div class="alert alert-danger" role="alert">
+                {errorMessage}
+            </div>
+        {/if}
 
-            {#if type == "register"}
-                <label for="confirmPassword">Confirm Password</label>
-                <input type="password" name="confirmPassword" placeholder="" required />
-            {/if}
+        <FormInput
+            name="id"
+            type="text"
+            displayName="{identityType == 'teacher' ? 'NIK' : 'NIS'}"
+            maxlength="{8}"
+            on:blur="{onIdInputBlur}"
+        />
 
-            <button type="submit">{voca.titleCase(type)}</button>
-        </form>
-    </div>
-{/if}
+        {#if type == "register"}
+            <FormInput name="email" type="email" displayName="Email" />
+        {/if}
+
+        <FormInput name="password" type="password" displayName="Password" />
+
+        {#if type == "register"}
+            <FormInput
+                name="confirmPassword"
+                type="password"
+                displayName="Confirm Password"
+            />
+        {/if}
+
+        {#if type == "login"}
+            <div class="checkbox mb-3">
+                <label>
+                    <input type="checkbox" name="rememberMe" /> Ingat saya
+                </label>
+            </div>
+        {/if}
+
+        <button class="w-100 btn btn-lg btn-primary mb-3" type="submit"
+            >{voca.titleCase(type)}</button
+        >
+    </form>
+
+    {#if type == "login"}
+        <p class="text-center">
+            Belum memiliki akun? <a href="login/register">Register</a>
+        </p>
+    {:else}
+        <p class="text-center">
+            Sudah memiliki akun? <a href="../login">Login</a>
+        </p>
+    {/if}
+</main>
 
 <style>
-    :global(.form-box) {
-        max-width: 360px;
-        margin: 20px auto;
-        padding: 10px 15px;
-        border-radius: 3px;
+    .form-signin {
         background-color: white;
-    }
-
-    :global(.form-box h1) {
-        text-align: center;
-        margin: 5px 0;
-    }
-
-    :global(.form-box form label) {
-        display: block;
-        margin: 3px 0;
-        font-size: 18px;
-    }
-
-    :global(.form-box form input) {
-        display: block;
-        box-sizing: border-box;
-        width: 100%;
-        margin-bottom: 20px;
-        padding: 7px;
-        border: none;
-        border: 1px solid gray;
-        border-radius: 6px;
-        outline: none;
-    }
-
-    :global(.form-box form button) {
-        display: block;
-        width: 100%;
-        height: 35px;
-        margin: 15px 0 10px 0;
-        border: none;
-        border-radius: 6px;
-        background: linear-gradient(
-            109.5deg,
-            rgb(76, 221, 242) 11.2%,
-            rgb(92, 121, 255) 91.1%
-        );
-        font-size: 18px;
-        cursor: pointer;
-    }
-
-    :global(.form-box form button:hover) {
-        background: linear-gradient(
-            109.5deg,
-            rgb(107, 225, 243) 11.2%,
-            rgb(110, 136, 254) 91.1%
-        );
+        border-radius: 10px;
+        box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px,
+            rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
+        max-width: 400px;
+        padding: 20px;
     }
 </style>
