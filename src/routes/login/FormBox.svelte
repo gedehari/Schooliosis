@@ -1,8 +1,7 @@
 <script lang="ts">
-    import { browser } from "$app/environment";
-    import FormInput from "$lib/form/FormInput.svelte";
     import { onMount } from "svelte";
     import voca from "voca";
+    import FormInput from "$lib/form/FormInput.svelte";
 
     const LAST_IDENTITY_KEY = "__schooliosis_lastIdentity";
 
@@ -18,19 +17,9 @@
     function onIdentityChange() {
         localStorage.setItem(LAST_IDENTITY_KEY, identityType);
     }
-
-    function onIdInputBlur() {
-        if (type == "register") {
-            window.alert("TODO: add identity checking...");
-        }
-    }
-
-    function onSubmit() {
-        window.alert("Boo!");
-    }
 </script>
 
-<main class="{`form-signin w-100 m-auto ${browser ? 'visible' : 'invisible'}`}">
+<main class="form-signin w-100 m-auto">
     <form method="post">
         <div class="btn-group d-flex mb-3" role="group">
             <input
@@ -42,7 +31,7 @@
                 bind:group="{identityType}"
                 on:change="{onIdentityChange}"
             />
-            <label class="btn btn-outline-primary" for="student">Student</label>
+            <label class="btn btn-outline-primary" for="student">Siswa</label>
 
             <input
                 type="radio"
@@ -53,7 +42,7 @@
                 bind:group="{identityType}"
                 on:change="{onIdentityChange}"
             />
-            <label class="btn btn-outline-primary" for="teacher">Teacher</label>
+            <label class="btn btn-outline-primary" for="teacher">Guru</label>
         </div>
 
         <h3 class="text-center mb-3">{voca.titleCase(type)}</h3>
@@ -69,7 +58,6 @@
             type="text"
             displayName="{identityType == 'teacher' ? 'NIK' : 'NIS'}"
             maxlength="{8}"
-            on:blur="{onIdInputBlur}"
         />
 
         {#if type == "register"}
@@ -82,7 +70,7 @@
             <FormInput
                 name="confirmPassword"
                 type="password"
-                displayName="Confirm Password"
+                displayName="Konfirmasi Password"
             />
         {/if}
 

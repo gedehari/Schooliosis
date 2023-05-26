@@ -41,7 +41,7 @@ model Siswa {
   pekerjaanAyah String?      @db.VarChar(32)
   namaIbu       String       @db.VarChar(255)
   pekerjaanIbu  String?      @db.VarChar(32)
-  Credential    Credential?
+  user          User?
 }
 
 model Guru {
@@ -52,15 +52,16 @@ model Guru {
   jenisKelamin JenisKelamin
   agama        Agama
   alamat       String
-  Credential   Credential?
+  user         User?
 }
 
-model Credential {
+model User {
   id           Int          @id @default(autoincrement())
   identityType IdentityType
   siswa        Siswa?       @relation(fields: [siswaNis], references: [nis])
   siswaNis     Int?         @unique
   guru         Guru?        @relation(fields: [guruNik], references: [nik])
   guruNik      Int?         @unique
+  email        String
   passwordHash String       @db.VarChar(255)
 }

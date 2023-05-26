@@ -29,20 +29,21 @@ CREATE TABLE `Guru` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
-CREATE TABLE `Credential` (
+CREATE TABLE `User` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `identityType` ENUM('Siswa', 'Guru') NOT NULL,
     `siswaNis` INTEGER NULL,
     `guruNik` INTEGER NULL,
+    `email` VARCHAR(191) NOT NULL,
     `passwordHash` VARCHAR(255) NOT NULL,
 
-    UNIQUE INDEX `Credential_siswaNis_key`(`siswaNis`),
-    UNIQUE INDEX `Credential_guruNik_key`(`guruNik`),
+    UNIQUE INDEX `User_siswaNis_key`(`siswaNis`),
+    UNIQUE INDEX `User_guruNik_key`(`guruNik`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- AddForeignKey
-ALTER TABLE `Credential` ADD CONSTRAINT `Credential_siswaNis_fkey` FOREIGN KEY (`siswaNis`) REFERENCES `Siswa`(`nis`) ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE `User` ADD CONSTRAINT `User_siswaNis_fkey` FOREIGN KEY (`siswaNis`) REFERENCES `Siswa`(`nis`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `Credential` ADD CONSTRAINT `Credential_guruNik_fkey` FOREIGN KEY (`guruNik`) REFERENCES `Guru`(`nik`) ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE `User` ADD CONSTRAINT `User_guruNik_fkey` FOREIGN KEY (`guruNik`) REFERENCES `Guru`(`nik`) ON DELETE SET NULL ON UPDATE CASCADE;

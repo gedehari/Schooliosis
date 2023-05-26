@@ -1,10 +1,8 @@
 <script lang="ts">
-    import { onMount } from "svelte";
-
     export let name: string;
     export let type: string;
-    export let value: string = "";
-    export let placeholder: string = "";
+    export let value = "";
+    export let placeholder = "";
     export let maxlength: number | null | undefined = undefined;
     export let displayName: string;
 
@@ -14,33 +12,20 @@
         const target = e.target as HTMLInputElement;
         value = target.value;
     }
-
-    function onBlur() {
-        validate();
-    }
-
-    function validate() {
-        
-    }
-
-    onMount(() => {
-        
-    })
 </script>
 
 <div class="mb-3">
     <div class="form-floating">
         <input
             class="form-control"
-            {type}
+            type="{type}"
             id="{floatingName}"
-            {name}
-            {placeholder}
-            {maxlength}
+            name="{name}"
+            placeholder="{placeholder}"
+            maxlength="{maxlength}"
             required
             on:input="{handleInput}"
             on:focus
-            on:blur={onBlur}
             on:blur
             on:change
         />
