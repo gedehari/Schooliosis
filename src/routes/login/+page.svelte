@@ -1,11 +1,15 @@
 <script lang="ts">
-    import { loginStatus } from "$lib/status";
+    import { loginStrings, type LoginStatus } from "$lib/auth/types";
     import type { ActionData } from "./$types";
     import FormBox from "./FormBox.svelte";
 
     export let form: ActionData;
 
-    $: errorMessage = form ? loginStatus[form?.status] || "FIXME" : undefined;
+    const status = form?.status as LoginStatus;
+
+    $: errorMessage = form
+        ? loginStrings[status] || "FIXME"
+        : undefined;
 </script>
 
 <FormBox type="login" errorMessage="{errorMessage}" />

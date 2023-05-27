@@ -1,35 +1,28 @@
-import { prismaClient } from '$lib/server/prismaClient';
-import type { LoginStatus } from '$lib/status';
-import type { Actions } from './$types';
+import type { LoginStatus, UserIdentityType } from "$lib/auth/types";
+import { prismaClient } from "$lib/server/prismaClient";
+import type { ActionFailure } from "@sveltejs/kit";
+import type { Actions } from "./$types";
+import { login } from "$lib/auth/auth.server";
+
+type LoginReturn = { status: LoginStatus }
 
 export const actions = {
-    default: async ({ request, cookies }): Promise<{ status: LoginStatus }> => {
+    default: async ({ request, cookies }): Promise<ActionFailure<LoginReturn> | LoginReturn> => {
         const data = await request.formData();
-        const identityType = data.get("identityType");
-        const id = data.get("id");
-        const password = data.get("password");
+
+        const identityType = data.get("identityType")?.toString() as UserIdentityType;
+        const id = data.get("id")?.toString();
+        const password = data.get("password")?.toString();
         const rememberMe = data.get("password") ? true : false;
 
         if (!identityType || !id || !password) {
             return {
-                status: 'INVALID_LOGIN'
+                status: "InvalidLogin"
             }
         }
 
-        const user = await prismaClient.user.findFirst({
-            where: {
-                siswaNis: parseInt(id.toString())
-            }
-        });
+        const status = await login({ identityType, id, password, rememberMe })
 
-        console.log(user);
-
-        if (user) {
-            console.log("log me in!!!")
-        }
-
-        return {
-            status: "INVALID_LOGIN"
-        };
+        return { status }
     }
 } satisfies Actions

@@ -1,10 +1,14 @@
-import { register, type UserIdentityType } from '$lib/server/auth';
-import type { RegisterStatus } from '$lib/status';
-import type { Actions } from './$types';
+import { register } from "$lib/auth/auth.server";
+import type { RegisterStatus, UserIdentityType } from "$lib/auth/types";
+import { fail, type ActionFailure } from "@sveltejs/kit";
+import type { Actions } from "./$types";
+
+type RegisterReturn = { status: RegisterStatus };
 
 export const actions = {
-    default: async ({ request }): Promise<{ status: RegisterStatus }> => {
+    default: async ({ request }): Promise<ActionFailure<RegisterReturn> | RegisterReturn> => {
         const data = await request.formData();
+
         const identityType = data.get("identityType")?.toString() as UserIdentityType;
         const id = data.get("id")?.toString();
         const email = data.get("email")?.toString();
@@ -12,19 +16,22 @@ export const actions = {
         const confirmPassword = data.get("password")?.toString();
 
         if (!identityType || !id || !email || !password || !confirmPassword) {
-            return {
-                status: "INVALID_REGISTER"
-            }
+            return fail(400, { status: "InvalidRegister" });
         }
 
         if (password != confirmPassword) {
-            return {
-                status: "PASSWORD_MISMATCH"
-            }
+            return fail(400, { status: "PasswordMismatch" });
         }
 
-        return {
-            status: await register(identityType, id, email, password)
-        };
+        const status = await register({ identityType, id, email, password })
+
+        if (status == "ServerError") {
+            return fail(500, { status })
+        }
+        else if (status != "Ok") {
+            return fail(400, { status })
+        }
+
+        return { status };
     }
 } satisfies Actions

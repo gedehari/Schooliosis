@@ -11,7 +11,7 @@
     let identityType: string;
 
     onMount(() => {
-        identityType = localStorage.getItem(LAST_IDENTITY_KEY) || "student";
+        identityType = localStorage.getItem(LAST_IDENTITY_KEY) || "Siswa";
     });
 
     function onIdentityChange() {
@@ -26,23 +26,24 @@
                 type="radio"
                 class="btn-check"
                 name="identityType"
-                id="student"
-                value="student"
+                id="Siswa"
+                value="Siswa"
                 bind:group="{identityType}"
                 on:change="{onIdentityChange}"
+                checked
             />
-            <label class="btn btn-outline-primary" for="student">Siswa</label>
+            <label class="btn btn-outline-primary" for="Siswa">Siswa</label>
 
             <input
                 type="radio"
                 class="btn-check"
                 name="identityType"
-                id="teacher"
-                value="teacher"
+                id="Guru"
+                value="Guru"
                 bind:group="{identityType}"
                 on:change="{onIdentityChange}"
             />
-            <label class="btn btn-outline-primary" for="teacher">Guru</label>
+            <label class="btn btn-outline-primary" for="Guru">Guru</label>
         </div>
 
         <h3 class="text-center mb-3">{voca.titleCase(type)}</h3>
@@ -56,7 +57,7 @@
         <FormInput
             name="id"
             type="text"
-            displayName="{identityType == 'teacher' ? 'NIK' : 'NIS'}"
+            displayName="{identityType == 'Guru' ? 'NIK' : 'NIS'}"
             maxlength="{8}"
         />
 
@@ -82,9 +83,9 @@
             </div>
         {/if}
 
-        <button class="w-100 btn btn-lg btn-primary mb-3" type="submit"
-            >{voca.titleCase(type)}</button
-        >
+        <button class="w-100 btn btn-lg btn-primary mb-3" type="submit">
+            {voca.titleCase(type)}
+        </button>
     </form>
 
     {#if type == "login"}
