@@ -1,29 +1,39 @@
 import { prismaClient } from "$lib/server/prismaClient";
-import bcrypt from "bcryptjs";
+import bcrypt from "bcrypt";
 import type { LoginForm, LoginStatus, RegisterForm, RegisterStatus } from "./types";
+import { validateLogin } from "./validation";
 
-export async function login({ identityType, id, password, rememberMe }: LoginForm): Promise<LoginStatus> {
+export async function login(session: AppSession, form: LoginForm): Promise<LoginStatus> {
+    const isValid = validateLogin(form);
+    if (isValid != "Ok") {
+        return isValid;
+    }
+
     const user = await prismaClient.user.findFirst({
         where: {
-            siswaNis: identityType == "Siswa" ? parseInt(id) : undefined,
-            guruNik: identityType == "Guru" ? parseInt(id) : undefined
+            siswaNis: form.identityType == "Siswa" ? form.id : undefined,
+            guruNik: form.identityType == "Guru" ? form.id : undefined
         }
     });
 
-    if (!user || !(await bcrypt.compare(password, user.passwordHash))) {
-        return "InvalidLogin"
+    if (!user || !(await bcrypt.compare(form.password, user.passwordHash))) {
+        return "InvalidLogin";
     }
 
-    // TODO: add session thing
+    await session.set({ userId: user.id });
 
-    return "Ok"
+    return "Ok";
 }
 
-export async function register({ identityType, id, email, password }: RegisterForm): Promise<RegisterStatus> {
+export async function logout(session: AppSession) {
+    await session.set({ userId: undefined });
+}
+
+export async function register(session: AppSession, form: RegisterForm): Promise<RegisterStatus> {
     const exists = await prismaClient.user.count({
         where: {
-            siswaNis: identityType == "Siswa" ? parseInt(id) : undefined,
-            guruNik: identityType == "Guru" ? parseInt(id) : undefined
+            siswaNis: form.identityType == "Siswa" ? form.id : undefined,
+            guruNik: form.identityType == "Guru" ? form.id : undefined
         }
     });
 
@@ -31,24 +41,14 @@ export async function register({ identityType, id, email, password }: RegisterFo
         return "AlreadyRegistered";
     }
 
-    if (identityType == "Siswa") {
-        const siswaExists = await prismaClient.siswa.count({
-            where: {
-                nis: parseInt(id)
-            }
-        })
-
+    if (form.identityType == "Siswa") {
+        const siswaExists = await prismaClient.siswa.count({ where: { nis: form.id } })
         if (!siswaExists) {
             return "IdNotRegistered";
         }
     }
-    else if (identityType == "Guru") {
-        const teacherExists = await prismaClient.guru.count({
-            where: {
-                nik: parseInt(id)
-            }
-        })
-
+    else if (form.identityType == "Guru") {
+        const teacherExists = await prismaClient.guru.count({ where: { nik: form.id } })
         if (!teacherExists) {
             return "IdNotRegistered";
         }
@@ -59,14 +59,14 @@ export async function register({ identityType, id, email, password }: RegisterFo
 
     // TODO: add password policy
 
-    const passwordHash = await bcrypt.hash(password, 16)
+    const passwordHash = await bcrypt.hash(form.password, 16)
 
     const newUser = await prismaClient.user.create({
         data: {
-            identityType,
-            siswaNis: identityType == "Siswa" ? parseInt(id) : undefined,
-            guruNik: identityType == "Guru" ? parseInt(id) : undefined,
-            email,
+            identityType: form.identityType,
+            siswaNis: form.identityType == "Siswa" ? form.id : undefined,
+            guruNik: form.identityType == "Guru" ? form.id : undefined,
+            email: form.email,
             passwordHash
         }
     })

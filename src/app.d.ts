@@ -2,12 +2,22 @@
 
 import type { PrismaClient } from "@prisma/client";
 
+interface SessionData {
+	userId?: number
+}
+
 // for information about these interfaces
 declare global {
+	type AppSession = import("svelte-kit-cookie-session").Session<SessionData>
+
 	namespace App {
 		// interface Error {}
-		// interface Locals {}
-		// interface PageData {}
+		interface Locals {
+			session: AppSession
+		}
+		interface PageData {
+			session: SessionData
+		}
 		// interface Platform {}
 	}
 

@@ -2,14 +2,14 @@ export type UserIdentityType = "Siswa" | "Guru"
 
 export type LoginForm = {
     identityType: UserIdentityType,
-    id: string,
+    id: number,
     password: string,
     rememberMe: boolean
 }
 
 export type RegisterForm = {
     identityType: UserIdentityType,
-    id: string,
+    id: number,
     email: string,
     password: string
 }
@@ -34,4 +34,3 @@ export const registerStrings = {
 }
 
 export type RegisterStatus = keyof typeof registerStrings;
-

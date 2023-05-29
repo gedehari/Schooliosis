@@ -1,2 +1,2 @@
-<h1>Schooliosis</h1>
-<p>Work in progress...</p>
+<h1>Welcome to Schooliosis</h1>
+<p>Looking for me? <a href="/login">Login</a></p>
