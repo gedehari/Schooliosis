@@ -25,11 +25,11 @@ async function main() {
 
     const contohGuru = await prisma.guru.upsert({
         where: {
-            nik: 3040
+            nik: 6520
         },
         update: {},
         create: {
-            nik: 6521,
+            nik: 6520,
             nama: "Contoh Guru",
             tempatLahir: "Denpasar",
             tanggalLahir: new Date(1990, 0, 1),

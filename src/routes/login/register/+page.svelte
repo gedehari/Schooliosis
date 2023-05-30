@@ -12,6 +12,10 @@
         : undefined;
 </script>
 
+<svelte:head>
+    <title>Register di Schooliosis</title>
+</svelte:head>
+
 {#if status == "Ok"}
     <div class="success-box w-100 m-auto">
         <h3 class="text-center">Register berhasil!</h3>

@@ -12,4 +12,8 @@
         : undefined;
 </script>
 
+<svelte:head>
+    <title>Log in ke Schooliosis</title>
+</svelte:head>
+
 <FormBox type="login" errorMessage="{errorMessage}" />
