@@ -15,9 +15,7 @@ declare global {
 		interface Locals {
 			session: AppSession
 		}
-		interface PageData {
-			session: SessionData
-		}
+		// interface PageData {}
 		// interface Platform {}
 	}
 

@@ -90,11 +90,11 @@
 
     {#if type == "login"}
         <p class="text-center">
-            Belum memiliki akun? <a href="login/register">Register</a>
+            Belum memiliki akun? <a href="/register">Register</a>
         </p>
     {:else}
         <p class="text-center">
-            Sudah memiliki akun? <a href="../login">Login</a>
+            Sudah memiliki akun? <a href="/login">Login</a>
         </p>
     {/if}
 </main>

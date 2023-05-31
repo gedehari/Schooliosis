@@ -1,7 +1,7 @@
 <script lang="ts">
     import { loginStrings, type LoginStatus } from "$lib/auth/types";
     import type { ActionData } from "./$types";
-    import FormBox from "./FormBox.svelte";
+    import FormBox from "../FormBox.svelte";
 
     export let form: ActionData;
 
@@ -13,7 +13,7 @@
 </script>
 
 <svelte:head>
-    <title>Log in ke Schooliosis</title>
+    <title>Login ke Schooliosis</title>
 </svelte:head>
 
 <FormBox type="login" errorMessage="{errorMessage}" />
