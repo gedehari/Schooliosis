@@ -1,7 +1,8 @@
 import { register } from "$lib/auth/auth.server";
-import type { RegisterForm, RegisterStatus, UserIdentityType } from "$lib/auth/types";
+import type { RegisterForm, RegisterStatus } from "$lib/auth/types";
 import { fail, type ActionFailure } from "@sveltejs/kit";
 import type { Actions } from "./$types";
+import type { UserIdentityType } from "$lib/user/types";
 
 type RegisterReturn = { status: RegisterStatus };
 

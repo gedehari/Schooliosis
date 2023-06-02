@@ -75,6 +75,7 @@
             />
         {/if}
 
+        <!-- TODO: make remember me functional -->
         {#if type == "login"}
             <div class="checkbox mb-3">
                 <label>

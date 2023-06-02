@@ -1,4 +1,4 @@
-export type UserIdentityType = "Siswa" | "Guru"
+import type { UserIdentityType } from "$lib/user/types"
 
 export type LoginForm = {
     identityType: UserIdentityType,

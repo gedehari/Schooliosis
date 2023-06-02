@@ -7,16 +7,17 @@ export const handle = handleSession({
     expires: 1,
 }, async ({ event, resolve }) => {
     const route = event.url.pathname;
-    const sessionData = event.locals.session.data;
+    const session = event.locals.session;
+    await session.refresh();
 
     if (route.startsWith("/dashboard")) {
-        if (!sessionData.userId) {
+        if (!session.data.userId) {
             throw redirect(303, "/login");
         }
     }
 
     if (route.startsWith("/login")) {
-        if (sessionData.userId) {
+        if (session.data.userId) {
             throw redirect(303, "/dashboard");
         }
     }
