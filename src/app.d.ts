@@ -1,6 +1,5 @@
 // See https://kit.svelte.dev/docs/types#app
 
-import type { UserInfo } from "$lib/user/types";
 import type { PrismaClient } from "@prisma/client";
 
 interface SessionData {
@@ -18,9 +17,7 @@ declare global {
 			session: AppSession
 		}
 
-		interface PageData {
-			me?: UserInfo
-		}
+		// interface PageData {}
 
 		// interface Platform {}
 	}

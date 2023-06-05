@@ -1,7 +1,7 @@
 import type { LoginForm, LoginStatus } from "$lib/auth/types";
 import { fail, type ActionFailure, redirect } from "@sveltejs/kit";
 import type { Actions } from "./$types";
-import { login } from "$lib/auth/auth.server";
+import { login } from "$lib/auth/server";
 import type { UserIdentityType } from "$lib/user/types";
 
 type LoginReturn = { status: LoginStatus }

@@ -4,8 +4,8 @@ export type UserIdentityType = "Siswa" | "Guru"
 
 export type UserInfo = {
     identityType: UserIdentityType,
-    id?: string
+    id: number
     name: string,
-    email?: string
+    email: string
     profile?: Siswa | Guru
 }

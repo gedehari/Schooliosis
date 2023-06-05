@@ -1,4 +1,4 @@
-import { register } from "$lib/auth/auth.server";
+import { register } from "$lib/auth/server";
 import type { RegisterForm, RegisterStatus } from "$lib/auth/types";
 import { fail, type ActionFailure } from "@sveltejs/kit";
 import type { Actions } from "./$types";
