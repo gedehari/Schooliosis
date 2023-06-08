@@ -29,7 +29,7 @@ export async function logout(session: AppSession) {
     await session.set({ userId: undefined });
 }
 
-export async function register(session: AppSession, form: RegisterForm): Promise<RegisterStatus> {
+export async function register(form: RegisterForm): Promise<RegisterStatus> {
     const exists = await prismaClient.user.count({
         where: {
             siswaNis: form.identityType == "Siswa" ? form.id : undefined,

@@ -23,7 +23,7 @@ export const actions = {
             throw fail(400, { status: "PasswordMismatch" });
         }
 
-        const status = await register(locals.session, form);
+        const status = await register(form);
         if (status == "ServerError") {
             return fail(500, { status });
         }
