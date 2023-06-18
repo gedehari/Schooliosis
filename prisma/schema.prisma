@@ -29,6 +29,12 @@ enum IdentityType {
   Guru
 }
 
+enum JenisJadwal {
+  Upacara
+  Pembelajaran
+  Istirahat
+}
+
 model Siswa {
   nis           Int          @id
   nama          String       @db.VarChar(255)
@@ -53,6 +59,7 @@ model Guru {
   agama        Agama
   alamat       String
   user         User?
+  Kelas        Kelas[]
 }
 
 model User {
@@ -64,4 +71,40 @@ model User {
   guruNik      Int?         @unique
   email        String
   passwordHash String       @db.VarChar(255)
+}
+
+model Kelas {
+  id          Int      @id @default(autoincrement())
+  tingkat     Int      @db.SmallInt
+  huruf       String   @db.Char(1)
+  wali        Guru     @relation(fields: [guruWaliNik], references: [nik])
+  guruWaliNik Int
+  Jadwal      Jadwal[]
+}
+
+model MataPelajaran {
+  id            Int      @id @default(autoincrement())
+  mataPelajaran String   @db.VarChar(64)
+  singkatan     String   @db.VarChar(16)
+  kkm           Float
+  Jadwal        Jadwal[]
+}
+
+model JamPelajaran {
+  id      Int      @id @default(autoincrement())
+  mulai   Int
+  selesai Int
+  Jadwal  Jadwal[]
+}
+
+model Jadwal {
+  id              Int            @id @default(autoincrement())
+  hari            Int
+  jenisJadwal     JenisJadwal
+  mataPelajaran   MataPelajaran? @relation(fields: [mataPelajaranId], references: [id])
+  mataPelajaranId Int?
+  jamPelajaran    JamPelajaran   @relation(fields: [jamPelajaranId], references: [id])
+  jamPelajaranId  Int
+  kelas           Kelas          @relation(fields: [kelasId], references: [id])
+  kelasId         Int
 }
