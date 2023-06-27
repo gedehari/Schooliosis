@@ -1,4 +1,5 @@
 import { env } from "$env/dynamic/private";
+import { getUserInfo } from "$lib/user/server";
 import { redirect, type Handle } from "@sveltejs/kit";
 import { handleSession } from "svelte-kit-cookie-session";
 
@@ -8,16 +9,23 @@ export const handle = handleSession({
 }, async ({ event, resolve }) => {
     const route = event.url.pathname;
     const session = event.locals.session;
-    await session.refresh();
+    const user = session.data.userId
+        ? await getUserInfo(session.data.userId || 0, true)
+        : undefined
+
+    if (user) {
+        event.locals.userInfo = user;
+        await session.refresh();
+    }
 
     if (route.startsWith("/dashboard")) {
-        if (!session.data.userId) {
+        if (!user) {
             throw redirect(303, "/login");
         }
     }
 
     if (route.startsWith("/login")) {
-        if (session.data.userId) {
+        if (user) {
             throw redirect(303, "/dashboard");
         }
     }

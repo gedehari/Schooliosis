@@ -47,6 +47,8 @@ model Siswa {
   pekerjaanAyah String?      @db.VarChar(32)
   namaIbu       String       @db.VarChar(255)
   pekerjaanIbu  String?      @db.VarChar(32)
+  kelas         Kelas?       @relation(fields: [kelasId], references: [id])
+  kelasId       Int?
   user          User?
 }
 
@@ -58,8 +60,9 @@ model Guru {
   jenisKelamin JenisKelamin
   agama        Agama
   alamat       String
+  kelas        Kelas?       @relation(fields: [kelasId], references: [id])
+  kelasId      Int?         @unique
   user         User?
-  Kelas        Kelas[]
 }
 
 model User {
@@ -74,12 +77,12 @@ model User {
 }
 
 model Kelas {
-  id          Int      @id @default(autoincrement())
-  tingkat     Int      @db.SmallInt
-  huruf       String   @db.Char(1)
-  wali        Guru     @relation(fields: [guruWaliNik], references: [nik])
-  guruWaliNik Int
-  Jadwal      Jadwal[]
+  id      Int      @id @default(autoincrement())
+  tingkat Int      @db.SmallInt
+  huruf   String   @db.Char(1)
+  siswa   Siswa[]
+  jadwal  Jadwal[]
+  guru    Guru?
 }
 
 model MataPelajaran {

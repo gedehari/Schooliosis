@@ -16,12 +16,12 @@ export async function getUserInfo(userId: number, includeProfile = false): Promi
     if (cached && cached.expire >= Date.now()) {
         if (includeProfile) {
             if (cached.user.profile) {
-                console.log("Used user cache, with profile");
+                // console.log("Used user cache, with profile");
                 return cached.user;
             }
         }
         else {
-            console.log("Used user cache, without profile");
+            // console.log("Used user cache, without profile");
             const { identityType, id, name, email } = cached.user;
             return { identityType, id, name, email };
         }

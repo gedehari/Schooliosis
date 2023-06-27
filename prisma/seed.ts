@@ -3,6 +3,17 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 async function main() {
+    const contohKelas = await prisma.kelas.upsert({
+        where: {
+            id: 1
+        },
+        update: {},
+        create: {
+            tingkat: 7,
+            huruf: "A"
+        }
+    });
+
     const contohSiswa = await prisma.siswa.upsert({
         where: {
             nis: 3040
@@ -19,7 +30,8 @@ async function main() {
             namaAyah: "Contoh Nama Bapak",
             pekerjaanAyah: "Jadi Contoh",
             namaIbu: "Contoh Nama Ibu",
-            pekerjaanIbu: "Jadi Contoh"
+            pekerjaanIbu: "Jadi Contoh",
+            kelasId: 1
         }
     });
 
@@ -35,19 +47,8 @@ async function main() {
             tanggalLahir: new Date(1990, 0, 1),
             jenisKelamin: "Perempuan",
             agama: "Hindu",
-            alamat: "Jl. Contoh Alamat"
-        }
-    });
-
-    const contohKelas = await prisma.kelas.upsert({
-        where: {
-            id: 1
-        },
-        update: {},
-        create: {
-            tingkat: 7,
-            huruf: "A",
-            guruWaliNik: 6520
+            alamat: "Jl. Contoh Alamat",
+            kelasId: 1
         }
     });
 
@@ -111,7 +112,7 @@ async function main() {
         skipDuplicates: true
     });
 
-    const contohJamPelajaran = prisma.jamPelajaran.createMany({
+    const contohJamPelajaran = await prisma.jamPelajaran.createMany({
         data: [
             {
                 id: 1,
@@ -167,12 +168,96 @@ async function main() {
         skipDuplicates: true
     });
 
+    const contohJadwal = await prisma.jadwal.createMany({
+        data: [
+            {
+                id: 1,
+                hari: 0,
+                jenisJadwal: "Upacara",
+                jamPelajaranId: 1,
+                kelasId: 1
+            },
+            {
+                id: 2,
+                hari: 0,
+                jenisJadwal: "Pembelajaran",
+                mataPelajaranId: 2,
+                jamPelajaranId: 2,
+                kelasId: 1
+            },
+            {
+                id: 3,
+                hari: 0,
+                jenisJadwal: "Pembelajaran",
+                mataPelajaranId: 2,
+                jamPelajaranId: 3,
+                kelasId: 1
+            },
+            {
+                id: 4,
+                hari: 0,
+                jenisJadwal: "Istirahat",
+                jamPelajaranId: 4,
+                kelasId: 1
+            },
+            {
+                id: 5,
+                hari: 0,
+                jenisJadwal: "Pembelajaran",
+                mataPelajaranId: 1,
+                jamPelajaranId: 5,
+                kelasId: 1
+            },
+            {
+                id: 6,
+                hari: 0,
+                jenisJadwal: "Pembelajaran",
+                mataPelajaranId: 1,
+                jamPelajaranId: 6,
+                kelasId: 1
+            },
+            {
+                id: 7,
+                hari: 0,
+                jenisJadwal: "Pembelajaran",
+                mataPelajaranId: 1,
+                jamPelajaranId: 7,
+                kelasId: 1
+            },
+            {
+                id: 8,
+                hari: 0,
+                jenisJadwal: "Istirahat",
+                jamPelajaranId: 8,
+                kelasId: 1
+            },
+            {
+                id: 9,
+                hari: 0,
+                jenisJadwal: "Pembelajaran",
+                mataPelajaranId: 4,
+                jamPelajaranId: 9,
+                kelasId: 1
+            },
+            {
+                id: 10,
+                hari: 0,
+                jenisJadwal: "Pembelajaran",
+                mataPelajaranId: 4,
+                jamPelajaranId: 10,
+                kelasId: 1
+            }
+        ],
+        skipDuplicates: true
+    })
+
     console.log({
+        contohKelas,
         contohSiswa,
         contohGuru,
-        contohKelas,
         contohMataPelajaran,
-        contohJamPelajaran
+        contohJamPelajaran,
+        contohJadwal
     });
 }
 

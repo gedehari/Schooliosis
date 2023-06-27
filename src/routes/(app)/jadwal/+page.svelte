@@ -7,16 +7,15 @@
     const { schedules } = data;
 
     let curDay = 0;
-    $: console.log(curDay);
+
+    $: scheduleDay = schedules.filter((value) => value.hari == curDay);
 
     function second2time(second: number): string {
         const hours = Math.floor(second / 3600);
         const minutes = Math.floor((second - hours * 3600) / 60);
-        return `${hours}:${minutes}`;
+        return `${hours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}`;
     }
 </script>
-
-<p>{curDay}</p>
 
 <div class="btn-group" role="group">
     {#each days as day, i (i)}
@@ -34,21 +33,25 @@
     {/each}
 </div>
 
-<table class="table w-auto">
-    <thead>
-        <tr>
-            <th scope="col">Jam Ke</th>
-            <th scope="col">Waktu</th>
-            <th scope="col">Pelajaran</th>
-        </tr>
-    </thead>
-    <tbody>
-        {#each schedules as schedule (schedule.id)}
+{#if scheduleDay.length > 0}
+    <table class="table w-auto">
+        <thead>
             <tr>
-                <th scope="row">{schedule.jamPelajaranId}</th>
-                <td>{second2time(schedule.jamPelajaran.mulai)} - {second2time(schedule.jamPelajaran.selesai)}</td>
-                <td>{schedule.jenisJadwal == "Pembelajaran" ? schedule.mataPelajaran?.mataPelajaran : schedule.jenisJadwal}</td>
+                <th scope="col">Jam Ke</th>
+                <th scope="col">Waktu</th>
+                <th scope="col">Pelajaran</th>
             </tr>
-        {/each}
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            {#each scheduleDay as schedule (schedule.id)}
+                <tr>
+                    <th scope="row">{schedule.jamPelajaranId}</th>
+                    <td>{second2time(schedule.jamPelajaran.mulai)} - {second2time(schedule.jamPelajaran.selesai)}</td>
+                    <td>{schedule.jenisJadwal == "Pembelajaran" ? schedule.mataPelajaran?.mataPelajaran : schedule.jenisJadwal}</td>
+                </tr>
+            {/each}
+        </tbody>
+    </table>
+{:else}
+    <h3 class="mt-2">Tidak ada jadwal.</h3>
+{/if}

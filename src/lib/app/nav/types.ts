@@ -1,4 +1,4 @@
-export const topNavStrings = {
+export const appNavStrings = {
     dashboard: "Dashboard",
     biodata: "Biodata",
     jadwal: "Jadwal",
@@ -6,4 +6,4 @@ export const topNavStrings = {
     nilai: "Nilai"
 };
 
-export type TopNavPage = keyof typeof topNavStrings;
+export type AppNav = keyof typeof appNavStrings;
