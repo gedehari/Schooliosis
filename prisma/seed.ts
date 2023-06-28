@@ -14,6 +14,8 @@ async function main() {
         }
     });
 
+    console.log(new Date("2007-01-01T00:00:00.0000Z"));
+
     const contohSiswa = await prisma.siswa.upsert({
         where: {
             nis: 3040
@@ -23,7 +25,7 @@ async function main() {
             nis: 3040,
             nama: "Contoh Siswa",
             tempatLahir: "Denpasar",
-            tanggalLahir: new Date(2007, 0, 1),
+            tanggalLahir: new Date("2007-01-01T00:00:00.0000Z"),
             jenisKelamin: "Laki",
             agama: "Hindu",
             alamat: "Jl. Contoh Alamat",
@@ -44,7 +46,7 @@ async function main() {
             nik: 6520,
             nama: "Contoh Guru",
             tempatLahir: "Denpasar",
-            tanggalLahir: new Date(1990, 0, 1),
+            tanggalLahir: new Date("1990-01-01T00:00:00.0000Z"),
             jenisKelamin: "Perempuan",
             agama: "Hindu",
             alamat: "Jl. Contoh Alamat",
