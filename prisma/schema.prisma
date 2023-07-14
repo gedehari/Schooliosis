@@ -42,6 +42,13 @@ enum StatusAbsen {
   Alpha
 }
 
+enum JenisNilai {
+  Tugas
+  Kuis
+  UTS
+  UAS
+}
+
 model Siswa {
   nis           Int          @id
   nama          String       @db.VarChar(255)
@@ -58,6 +65,7 @@ model Siswa {
   kelasId       Int?
   user          User?
   absen         Absen[]
+  nilai         Nilai[]
 }
 
 model Guru {
@@ -98,7 +106,8 @@ model MataPelajaran {
   mataPelajaran String   @db.VarChar(64)
   singkatan     String   @db.VarChar(16)
   kkm           Float
-  Jadwal        Jadwal[]
+  jadwal        Jadwal[]
+  nilai         Nilai[]
 }
 
 model JamPelajaran {
@@ -126,4 +135,15 @@ model Absen {
   siswaNis    Int
   statusAbsen StatusAbsen
   tanggal     DateTime    @unique
+}
+
+model Nilai {
+  siswa           Siswa         @relation(fields: [siswaNis], references: [nis])
+  siswaNis        Int
+  jenisNilai      JenisNilai
+  mataPelajaran   MataPelajaran @relation(fields: [mataPelajaranId], references: [id])
+  mataPelajaranId Int
+  nilai           Int
+
+  @@id([siswaNis, jenisNilai, mataPelajaranId])
 }
