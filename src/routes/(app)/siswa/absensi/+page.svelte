@@ -1,5 +1,4 @@
 <script lang=ts>
-    import { each } from "svelte/internal";
     import type { PageData } from "./$types";
 
     export let data: PageData;

@@ -25,6 +25,6 @@ export const actions = {
             return fail(400, { status });
         }
 
-        throw redirect(303, "/dashboard");
+        throw redirect(303, `/${form.identityType == "Siswa" ? "siswa" : "guru"}/dashboard`);
     }
 } satisfies Actions

@@ -1,17 +1,17 @@
 import { env } from "$env/dynamic/private";
 import { getUserInfo } from "$lib/user/server";
-import { redirect, type Handle, error } from "@sveltejs/kit";
+import { redirect, type Handle } from "@sveltejs/kit";
 import { handleSession } from "svelte-kit-cookie-session";
 
-export const handle = handleSession({
+export const handle: Handle = handleSession({
     secret: env.COOKIE_SECRET,
-    expires: 1,
+    expires: 1, 
 }, async ({ event, resolve }) => {
     const route = event.route.id;
     if (!route) {
-        console.error("Route is null??");
-        throw error(500);
+        return resolve(event);
     }
+
     const session = event.locals.session;
     const user = session.data.userId
         ? await getUserInfo(session.data.userId || 0, true)
@@ -28,11 +28,13 @@ export const handle = handleSession({
         }
     }
 
-    if (route.startsWith("/login")) {
-        if (user) {
-            throw redirect(303, "/dashboard");
+    if (route.startsWith("/(auth)")) {
+        if (!route.startsWith("/(auth)/logout")) {
+            if (user) {
+                throw redirect(303, `/${user.identityType == "Siswa" ? "siswa" : "guru"}/dashboard`);
+            }
         }
     }
 
     return resolve(event);
-}) satisfies Handle;
+});
