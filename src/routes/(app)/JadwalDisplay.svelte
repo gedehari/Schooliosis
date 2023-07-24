@@ -2,8 +2,12 @@
     import type { Jadwal, JamPelajaran, MataPelajaran } from "@prisma/client";
 
     export let schedules: (Jadwal & {
-        jamPelajaran: JamPelajaran;
+        kelas: {
+            tingkat: number;
+            huruf: string;
+        };
         mataPelajaran: MataPelajaran | null;
+        jamPelajaran: JamPelajaran;
     })[];
 
     const days = ["Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu", "Minggu"];
@@ -17,6 +21,9 @@
         return `${hours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}`;
     }
 </script>
+
+<!-- TODO: add kelas display -->
+
 <div class="box bg-white shadow">
     <div class="btn-group" role="group">
         {#each days as day, i (i)}

@@ -21,6 +21,9 @@ export const handle: Handle = handleSession({
         event.locals.userInfo = user;
         await session.refresh();
     }
+    else {
+        await session.set({ userId: undefined });
+    }
 
     if (route.startsWith("/(app)")) {
         if (!user) {

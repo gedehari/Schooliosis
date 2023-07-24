@@ -14,46 +14,6 @@ async function main() {
         }
     });
 
-    console.log(new Date("2007-01-01T00:00:00.0000Z"));
-
-    const contohSiswa = await prisma.siswa.upsert({
-        where: {
-            nis: 3040
-        },
-        update: {},
-        create: {
-            nis: 3040,
-            nama: "Contoh Siswa",
-            tempatLahir: "Denpasar",
-            tanggalLahir: new Date("2007-01-01T00:00:00.0000Z"),
-            jenisKelamin: "Laki",
-            agama: "Hindu",
-            alamat: "Jl. Contoh Alamat",
-            namaAyah: "Contoh Nama Bapak",
-            pekerjaanAyah: "Jadi Contoh",
-            namaIbu: "Contoh Nama Ibu",
-            pekerjaanIbu: "Jadi Contoh",
-            kelasId: 1
-        }
-    });
-
-    const contohGuru = await prisma.guru.upsert({
-        where: {
-            nik: 6520
-        },
-        update: {},
-        create: {
-            nik: 6520,
-            nama: "Contoh Guru",
-            tempatLahir: "Denpasar",
-            tanggalLahir: new Date("1990-01-01T00:00:00.0000Z"),
-            jenisKelamin: "Perempuan",
-            agama: "Hindu",
-            alamat: "Jl. Contoh Alamat",
-            kelasId: 1
-        }
-    });
-
     const contohMataPelajaran = await prisma.mataPelajaran.createMany({
         data: [
             {
@@ -112,6 +72,45 @@ async function main() {
             },
         ],
         skipDuplicates: true
+    });
+
+    const contohSiswa = await prisma.siswa.upsert({
+        where: {
+            nis: 3040
+        },
+        update: {},
+        create: {
+            nis: 3040,
+            nama: "Contoh Siswa",
+            tempatLahir: "Denpasar",
+            tanggalLahir: new Date("2007-01-01T00:00:00.0000Z"),
+            jenisKelamin: "Laki",
+            agama: "Hindu",
+            alamat: "Jl. Contoh Alamat",
+            namaAyah: "Contoh Nama Bapak",
+            pekerjaanAyah: "Jadi Contoh",
+            namaIbu: "Contoh Nama Ibu",
+            pekerjaanIbu: "Jadi Contoh",
+            kelasId: 1
+        }
+    });
+
+    const contohGuru = await prisma.guru.upsert({
+        where: {
+            nik: 6520
+        },
+        update: {},
+        create: {
+            nik: 6520,
+            nama: "Contoh Guru",
+            tempatLahir: "Denpasar",
+            tanggalLahir: new Date("1990-01-01T00:00:00.0000Z"),
+            jenisKelamin: "Perempuan",
+            agama: "Hindu",
+            alamat: "Jl. Contoh Alamat",
+            mataPelajaranId: 1,
+            kelasId: 1
+        }
     });
 
     const contohJamPelajaran = await prisma.jamPelajaran.createMany({
@@ -177,7 +176,7 @@ async function main() {
                 hari: 0,
                 jenisJadwal: "Upacara",
                 jamPelajaranId: 1,
-                kelasId: 1
+                kelasId: 1,
             },
             {
                 id: 2,
@@ -208,7 +207,8 @@ async function main() {
                 jenisJadwal: "Pembelajaran",
                 mataPelajaranId: 1,
                 jamPelajaranId: 5,
-                kelasId: 1
+                kelasId: 1,
+                guruNik: 6520
             },
             {
                 id: 6,
@@ -216,7 +216,8 @@ async function main() {
                 jenisJadwal: "Pembelajaran",
                 mataPelajaranId: 1,
                 jamPelajaranId: 6,
-                kelasId: 1
+                kelasId: 1,
+                guruNik: 6520
             },
             {
                 id: 7,
@@ -224,7 +225,8 @@ async function main() {
                 jenisJadwal: "Pembelajaran",
                 mataPelajaranId: 1,
                 jamPelajaranId: 7,
-                kelasId: 1
+                kelasId: 1,
+                guruNik: 6520
             },
             {
                 id: 8,
@@ -254,10 +256,10 @@ async function main() {
     })
 
     console.log({
+        contohMataPelajaran,
         contohKelas,
         contohSiswa,
         contohGuru,
-        contohMataPelajaran,
         contohJamPelajaran,
         contohJadwal
     });

@@ -69,16 +69,19 @@ model Siswa {
 }
 
 model Guru {
-  nik          Int          @id
-  nama         String       @db.VarChar(255)
-  tempatLahir  String       @db.VarChar(32)
-  tanggalLahir DateTime     @db.Date
-  jenisKelamin JenisKelamin
-  agama        Agama
-  alamat       String
-  kelas        Kelas?       @relation(fields: [kelasId], references: [id])
-  kelasId      Int?         @unique
-  user         User?
+  nik             Int           @id
+  nama            String        @db.VarChar(255)
+  tempatLahir     String        @db.VarChar(32)
+  tanggalLahir    DateTime      @db.Date
+  jenisKelamin    JenisKelamin
+  agama           Agama
+  alamat          String
+  mataPelajaran   MataPelajaran @relation(fields: [mataPelajaranId], references: [id])
+  mataPelajaranId Int
+  kelas           Kelas?        @relation(fields: [kelasId], references: [id])
+  kelasId         Int?          @unique
+  user            User?
+  jadwal          Jadwal[]
 }
 
 model User {
@@ -108,13 +111,14 @@ model MataPelajaran {
   kkm           Float
   jadwal        Jadwal[]
   nilai         Nilai[]
+  guru          Guru[]
 }
 
 model JamPelajaran {
   id      Int      @id @default(autoincrement())
   mulai   Int
   selesai Int
-  Jadwal  Jadwal[]
+  jadwal  Jadwal[]
 }
 
 model Jadwal {
@@ -127,6 +131,8 @@ model Jadwal {
   jamPelajaranId  Int
   kelas           Kelas          @relation(fields: [kelasId], references: [id])
   kelasId         Int
+  guru            Guru?          @relation(fields: [guruNik], references: [nik])
+  guruNik         Int?
 }
 
 model Absen {
