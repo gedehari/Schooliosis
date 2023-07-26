@@ -1,14 +1,14 @@
-import type { UserIdentityType } from "$lib/user/types"
+import type { IdentityType } from "@prisma/client"
 
 export type LoginForm = {
-    identityType: UserIdentityType,
+    identityType: IdentityType,
     id: number,
     password: string,
     rememberMe: boolean
 }
 
 export type RegisterForm = {
-    identityType: UserIdentityType,
+    identityType: IdentityType,
     id: number,
     email: string,
     password: string

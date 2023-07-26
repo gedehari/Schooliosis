@@ -2,7 +2,7 @@ import { register } from "$lib/auth/server";
 import type { RegisterForm, RegisterStatus } from "$lib/auth/types";
 import { fail, type ActionFailure } from "@sveltejs/kit";
 import type { Actions } from "./$types";
-import type { UserIdentityType } from "$lib/user/types";
+import type { IdentityType } from "@prisma/client";
 
 type RegisterReturn = { status: RegisterStatus };
 
@@ -11,7 +11,7 @@ export const actions = {
         const data = await request.formData();
 
         const form: RegisterForm = {
-            identityType: data.get("identityType")?.toString() as UserIdentityType,
+            identityType: data.get("identityType")?.toString() as IdentityType,
             id: parseInt(data.get("id")?.toString() || ""),
             email: data.get("email")?.toString() || "",
             password: data.get("password")?.toString() ?? ""

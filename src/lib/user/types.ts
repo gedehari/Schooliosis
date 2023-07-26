@@ -1,9 +1,7 @@
-import type { Guru, Siswa } from "@prisma/client"
-
-export type UserIdentityType = "Siswa" | "Guru"
+import type { Guru, IdentityType, Siswa } from "@prisma/client"
 
 export type UserInfo = {
-    identityType: UserIdentityType,
+    identityType: IdentityType,
     id: number
     name: string,
     email: string

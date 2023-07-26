@@ -2,7 +2,7 @@ import type { LoginForm, LoginStatus } from "$lib/auth/types";
 import { fail, type ActionFailure, redirect } from "@sveltejs/kit";
 import type { Actions } from "./$types";
 import { login } from "$lib/auth/server";
-import type { UserIdentityType } from "$lib/user/types";
+import type { IdentityType } from "@prisma/client";
 
 type LoginReturn = { status: LoginStatus }
 
@@ -11,7 +11,7 @@ export const actions = {
         const data = await request.formData();
 
         const form: LoginForm = {
-            identityType: data.get("identityType")?.toString() as UserIdentityType,
+            identityType: data.get("identityType")?.toString() as IdentityType,
             id: parseInt(data.get("id")?.toString() || ""),
             password: data.get("password")?.toString() ?? "",
             rememberMe: data.get("rememberMe") ? true : false

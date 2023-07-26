@@ -42,7 +42,7 @@
     </div>
 
     {#if daySchedule.length > 0}
-        <table class="table w-auto">
+        <table class="table">
             <thead>
                 <tr>
                     <th scope="col">Jam Ke</th>

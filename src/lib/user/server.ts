@@ -1,5 +1,5 @@
 import { prismaClient } from "$lib/server/prismaClient";
-import type { UserIdentityType, UserInfo } from "./types";
+import type { UserInfo } from "./types";
 
 type UserCache = {
     user: UserInfo,
@@ -41,7 +41,7 @@ export async function getUserInfo(userId: number, includeProfile = false): Promi
         return undefined;
     }
 
-    const identityType = user.identityType as UserIdentityType;
+    const identityType = user.identityType;
     const userInfo = {
         identityType,
         id: user.id,
