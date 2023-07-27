@@ -1,4 +1,6 @@
+import bcrypt from "bcrypt";
 import { PrismaClient } from "@prisma/client";
+// import { registerAdmin } from "../src/lib/auth/server"
 
 const prisma = new PrismaClient();
 
@@ -253,7 +255,34 @@ async function main() {
             }
         ],
         skipDuplicates: true
-    })
+    });
+
+    if (process.env.ROOT_ADMIN_PASSWORD) {
+        const exists = await prisma.user.count({
+            where: {
+                email: "admin@example.com"
+            }
+        });
+
+        if (!exists) {
+            const passwordHash = await bcrypt.hash(process.env.ROOT_ADMIN_PASSWORD, 16);
+
+            const newUser = await prisma.user.create({
+                data: {
+                    identityType: "Admin",
+                    email: "admin@example.com",
+                    passwordHash
+                }
+            });
+
+            if (newUser) {
+                console.error("Failed creating admin user");
+            }
+        }
+    }
+    else {
+        console.log("Warning: Root account not created.")
+    }
 
     console.log({
         contohMataPelajaran,

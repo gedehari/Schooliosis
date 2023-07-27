@@ -33,7 +33,7 @@ export async function register(form: RegisterForm): Promise<RegisterStatus> {
     const exists = await prismaClient.user.count({
         where: {
             siswaNis: form.identityType == "Siswa" ? form.id : undefined,
-            guruNik: form.identityType == "Guru" ? form.id : undefined
+            guruNik: form.identityType == "Guru" ? form.id : undefined,
         }
     });
 
@@ -70,6 +70,33 @@ export async function register(form: RegisterForm): Promise<RegisterStatus> {
             passwordHash
         }
     })
+
+    if (!newUser)
+        return "ServerError"
+
+    return "Ok";
+}
+
+export async function registerAdmin(email: string, password: string): Promise<RegisterStatus> {
+    const exists = await prismaClient.user.count({
+        where: {
+            email
+        }
+    });
+
+    if (exists) {
+        return "AlreadyRegistered";
+    }
+
+    const passwordHash = await bcrypt.hash(password, 16);
+
+    const newUser = await prismaClient.user.create({
+        data: {
+            identityType: "Admin",
+            email,
+            passwordHash
+        }
+    });
 
     if (!newUser)
         return "ServerError"

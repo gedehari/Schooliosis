@@ -6,7 +6,7 @@ import type { IdentityType } from "@prisma/client";
 
 type LoginReturn = { status: LoginStatus }
 
-export const actions = {
+export const actions: Actions = {
     default: async ({ request, locals }): Promise<ActionFailure<LoginReturn>> => {
         const data = await request.formData();
 
@@ -27,4 +27,4 @@ export const actions = {
 
         throw redirect(303, `/${form.identityType == "Siswa" ? "siswa" : "guru"}/dashboard`);
     }
-} satisfies Actions
+}

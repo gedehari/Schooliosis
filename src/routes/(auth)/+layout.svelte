@@ -11,6 +11,11 @@
         align-items: center;
         padding-top: 40px;
         padding-bottom: 40px;
-        background-color: #b4b4b4 !important;
+
+        background: url("/loginbg.jpg");
+        background-repeat: no-repeat;
+        background-size: cover;
+        /* background-color: grey; */
+        /* background-blend-mode: multiply; */
     }
 </style>

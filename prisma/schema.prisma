@@ -27,6 +27,7 @@ enum Agama {
 enum IdentityType {
   Siswa
   Guru
+  Admin
 }
 
 enum JenisJadwal {
@@ -91,7 +92,7 @@ model User {
   siswaNis     Int?         @unique
   guru         Guru?        @relation(fields: [guruNik], references: [nik])
   guruNik      Int?         @unique
-  email        String
+  email        String // TODO: make email unique, add the relevant validators too...
   passwordHash String       @db.VarChar(255)
 }
 
