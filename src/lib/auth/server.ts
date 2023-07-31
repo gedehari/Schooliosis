@@ -11,8 +11,9 @@ export async function login(session: AppSession, form: LoginForm): Promise<Login
 
     const user = await prismaClient.user.findFirst({
         where: {
-            siswaNis: form.identityType == "Siswa" ? form.id : undefined,
-            guruNik: form.identityType == "Guru" ? form.id : undefined
+            siswaNis: form.identityType == "Siswa" ? parseInt(form.id) : undefined,
+            guruNik: form.identityType == "Guru" ? parseInt(form.id) : undefined,
+            email: form.identityType == "Admin" ? form.id : undefined
         }
     });
 
@@ -30,31 +31,41 @@ export async function logout(session: AppSession) {
 }
 
 export async function register(form: RegisterForm): Promise<RegisterStatus> {
-    const exists = await prismaClient.user.count({
+    const userExists = await prismaClient.user.count({
         where: {
-            siswaNis: form.identityType == "Siswa" ? form.id : undefined,
-            guruNik: form.identityType == "Guru" ? form.id : undefined,
+            siswaNis: form.identityType == "Siswa" ? parseInt(form.id) : undefined,
+            guruNik: form.identityType == "Guru" ? parseInt(form.id) : undefined,
         }
     });
 
-    if (exists) {
+    if (userExists) {
         return "AlreadyRegistered";
     }
 
     if (form.identityType == "Siswa") {
-        const siswaExists = await prismaClient.siswa.count({ where: { nis: form.id } })
+        const siswaExists = await prismaClient.siswa.count({ where: { nis: parseInt(form.id) } })
         if (!siswaExists) {
             return "IdNotRegistered";
         }
     }
     else if (form.identityType == "Guru") {
-        const teacherExists = await prismaClient.guru.count({ where: { nik: form.id } })
+        const teacherExists = await prismaClient.guru.count({ where: { nik: parseInt(form.id) } })
         if (!teacherExists) {
             return "IdNotRegistered";
         }
     }
     else {
         return "Unknown";
+    }
+
+    const emailExists = await prismaClient.user.count({
+        where: {
+            email: form.email
+        }
+    });
+
+    if (emailExists) {
+        return "EmailAlreadyUsed";
     }
 
     // TODO: add password policy
@@ -64,8 +75,8 @@ export async function register(form: RegisterForm): Promise<RegisterStatus> {
     const newUser = await prismaClient.user.create({
         data: {
             identityType: form.identityType,
-            siswaNis: form.identityType == "Siswa" ? form.id : undefined,
-            guruNik: form.identityType == "Guru" ? form.id : undefined,
+            siswaNis: form.identityType == "Siswa" ? parseInt(form.id) : undefined,
+            guruNik: form.identityType == "Guru" ? parseInt(form.id) : undefined,
             email: form.email,
             passwordHash
         }
@@ -77,7 +88,7 @@ export async function register(form: RegisterForm): Promise<RegisterStatus> {
     return "Ok";
 }
 
-export async function registerAdmin(email: string, password: string): Promise<RegisterStatus> {
+export async function registerAdmin(email: string, password: string, session: AppSession | undefined = undefined): Promise<RegisterStatus> {
     const exists = await prismaClient.user.count({
         where: {
             email
@@ -98,8 +109,13 @@ export async function registerAdmin(email: string, password: string): Promise<Re
         }
     });
 
-    if (!newUser)
+    if (!newUser) {
         return "ServerError"
+    }
+
+    if (session) {
+        await session.set({ userId: newUser.id });
+    }
 
     return "Ok";
 }

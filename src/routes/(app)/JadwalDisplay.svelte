@@ -2,10 +2,10 @@
     import type { Jadwal, JamPelajaran, MataPelajaran } from "@prisma/client";
 
     export let schedules: (Jadwal & {
-        kelas: {
-            tingkat: number;
-            huruf: string;
-        };
+        // kelas: {
+        //     tingkat: number;
+        //     huruf: string;
+        // }
         mataPelajaran: MataPelajaran | null;
         jamPelajaran: JamPelajaran;
     })[];

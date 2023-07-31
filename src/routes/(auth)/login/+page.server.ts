@@ -12,7 +12,7 @@ export const actions: Actions = {
 
         const form: LoginForm = {
             identityType: data.get("identityType")?.toString() as IdentityType,
-            id: parseInt(data.get("id")?.toString() || ""),
+            id: data.get("id")?.toString() ?? "",
             password: data.get("password")?.toString() ?? "",
             rememberMe: data.get("rememberMe") ? true : false
         }

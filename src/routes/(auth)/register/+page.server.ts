@@ -12,8 +12,8 @@ export const actions = {
 
         const form: RegisterForm = {
             identityType: data.get("identityType")?.toString() as IdentityType,
-            id: parseInt(data.get("id")?.toString() || ""),
-            email: data.get("email")?.toString() || "",
+            id: data.get("id")?.toString() || "",
+            email: data.get("email")?.toString() ?? "",
             password: data.get("password")?.toString() ?? ""
         }
 

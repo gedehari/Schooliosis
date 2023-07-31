@@ -50,6 +50,11 @@ enum JenisNilai {
   UAS
 }
 
+model Config {
+  key   String @id @db.VarChar(64)
+  value String @db.Text
+}
+
 model Siswa {
   nis           Int          @id
   nama          String       @db.VarChar(255)
@@ -92,8 +97,10 @@ model User {
   siswaNis     Int?         @unique
   guru         Guru?        @relation(fields: [guruNik], references: [nik])
   guruNik      Int?         @unique
-  email        String // TODO: make email unique, add the relevant validators too...
+  email        String       @unique // TODO: make email unique, add the relevant validators too...
   passwordHash String       @db.VarChar(255)
+
+  @@index([email])
 }
 
 model Kelas {

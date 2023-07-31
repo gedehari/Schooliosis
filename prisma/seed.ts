@@ -5,6 +5,21 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 async function main() {
+    const isDbConfigured = await prisma.config.upsert({
+        where: {
+            key: "IS_CONFIGURED"
+        },
+        create: {
+            key: "IS_CONFIGURED",
+            value: "false"
+        },
+        update: {
+            value: "false"
+        }
+    });
+}
+
+async function fillWithExampleData() {
     const contohKelas = await prisma.kelas.upsert({
         where: {
             id: 1
@@ -257,34 +272,7 @@ async function main() {
         skipDuplicates: true
     });
 
-    if (process.env.ROOT_ADMIN_PASSWORD) {
-        const exists = await prisma.user.count({
-            where: {
-                email: "admin@example.com"
-            }
-        });
-
-        if (!exists) {
-            const passwordHash = await bcrypt.hash(process.env.ROOT_ADMIN_PASSWORD, 16);
-
-            const newUser = await prisma.user.create({
-                data: {
-                    identityType: "Admin",
-                    email: "admin@example.com",
-                    passwordHash
-                }
-            });
-
-            if (newUser) {
-                console.error("Failed creating admin user");
-            }
-        }
-    }
-    else {
-        console.log("Warning: Root account not created.")
-    }
-
-    console.log({
+    console.log("Populated the database with these data:\n", {
         contohMataPelajaran,
         contohKelas,
         contohSiswa,
@@ -295,6 +283,7 @@ async function main() {
 }
 
 main()
+    .then(fillWithExampleData)
     .then(async () => {
         await prisma.$disconnect();
     })
@@ -302,4 +291,4 @@ main()
         console.error(e);
         await prisma.$disconnect();
         process.exit(1);
-    })
+    });

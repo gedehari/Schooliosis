@@ -61,6 +61,12 @@ export const appRoutes: { [key: string]: Routes } = {
             icon: "bi-trophy-fill",
         },
     },
+    admin: {
+        dashboard: {
+            name: "Dashboard",
+            icon: "bi-house-fill",
+        },
+    }
 };
 
 export type RouteSection = keyof typeof appRoutes;
