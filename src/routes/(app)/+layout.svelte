@@ -1,6 +1,10 @@
 <script lang="ts">
     import { page } from "$app/stores";
+    import type { PageData } from "./$types";
     import { appRoutes, type RouteSection } from "./types";
+
+    export let data: PageData;
+    const { instanceName } = data;
 
     $: path = $page.url.pathname.slice(1).split("/");
     $: section = path[0] as RouteSection;
@@ -11,13 +15,13 @@
 </script>
 
 <svelte:head>
-    <title>{title} - Schooliosis</title>
+    <title>{title} - {instanceName}</title>
 </svelte:head>
 
 <header>
     <div class="s-header">
         <div class="container d-flex">
-            <div class="flex-fill s-header-name">Schooliosis</div>
+            <div class="flex-fill s-header-name">{instanceName}</div>
             <a href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                 <img class="s-header-profile" src="/profile.png" height="42px" alt="" />
             </a>

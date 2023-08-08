@@ -17,6 +17,8 @@ async function main() {
             value: "false"
         }
     });
+
+    console.log("Added configuration with these values:\n", isDbConfigured)
 }
 
 async function fillWithExampleData() {

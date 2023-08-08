@@ -3,6 +3,7 @@ import { prismaClient } from "$lib/server/prismaClient";
 import { getUserInfo } from "$lib/user/server";
 import { redirect, type Handle } from "@sveltejs/kit";
 import { handleSession } from "svelte-kit-cookie-session";
+import voca from "voca"
 
 let isConfigured = false
 
@@ -56,7 +57,7 @@ export const handle: Handle = handleSession({
     if (route.startsWith("/(auth)")) {
         if (!route.startsWith("/(auth)/logout")) {
             if (user) {
-                throw redirect(303, `/${user.identityType == "Siswa" ? "siswa" : "guru"}/dashboard`);
+                throw redirect(303, `/${voca.lowerCase(user.identityType)}/dashboard`);
             }
         }
     }

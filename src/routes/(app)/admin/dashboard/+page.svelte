@@ -1,1 +1,1 @@
-<p>I'm in admin!</p>
+<p>I'm in admin dashboard!</p>
