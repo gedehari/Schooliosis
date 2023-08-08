@@ -1,22 +1,22 @@
 // See https://kit.svelte.dev/docs/types#app
 
-import type { UserInfo } from "$lib/user/types";
-import type { PrismaClient } from "@prisma/client";
+import type { UserInfo } from '$lib/user/types';
+import type { PrismaClient } from '@prisma/client';
 
 interface SessionData {
-	userId?: number
+	userId?: number;
 }
 
 // for information about these interfaces
 declare global {
-	type AppSession = import("svelte-kit-cookie-session").Session<SessionData>
+	type AppSession = import('svelte-kit-cookie-session').Session<SessionData>;
 
 	namespace App {
 		// interface Error {}
 
 		interface Locals {
-			session: AppSession,
-			userInfo?: UserInfo
+			session: AppSession;
+			userInfo?: UserInfo;
 		}
 
 		// interface PageData {}
@@ -24,7 +24,7 @@ declare global {
 		// interface Platform {}
 	}
 
-	var __prisma: PrismaClient //eslint-disable-line no-var
+	var __prisma: PrismaClient; //eslint-disable-line no-var
 }
 
 export {};
