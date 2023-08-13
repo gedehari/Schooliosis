@@ -75,17 +75,17 @@ model Siswa {
 }
 
 model Guru {
-  nik             Int           @id
-  nama            String        @db.VarChar(255)
-  tempatLahir     String        @db.VarChar(32)
-  tanggalLahir    DateTime      @db.Date
+  nik             Int            @id
+  nama            String         @db.VarChar(255)
+  tempatLahir     String         @db.VarChar(32)
+  tanggalLahir    DateTime       @db.Date
   jenisKelamin    JenisKelamin
   agama           Agama
   alamat          String
-  mataPelajaran   MataPelajaran @relation(fields: [mataPelajaranId], references: [id])
-  mataPelajaranId Int
-  kelas           Kelas?        @relation(fields: [kelasId], references: [id])
-  kelasId         Int?          @unique
+  mataPelajaran   MataPelajaran? @relation(fields: [mataPelajaranId], references: [id])
+  mataPelajaranId Int?
+  kelas           Kelas?         @relation(fields: [kelasId], references: [id])
+  kelasId         Int?           @unique
   user            User?
   jadwal          Jadwal[]
 }
@@ -93,9 +93,9 @@ model Guru {
 model User {
   id           Int          @id @default(autoincrement())
   identityType IdentityType
-  siswa        Siswa?       @relation(fields: [siswaNis], references: [nis])
+  siswa        Siswa?       @relation(fields: [siswaNis], references: [nis], onDelete: Cascade)
   siswaNis     Int?         @unique
-  guru         Guru?        @relation(fields: [guruNik], references: [nik])
+  guru         Guru?        @relation(fields: [guruNik], references: [nik], onDelete: Cascade)
   guruNik      Int?         @unique
   email        String       @unique // TODO: make email unique, add the relevant validators too...
   passwordHash String       @db.VarChar(255)

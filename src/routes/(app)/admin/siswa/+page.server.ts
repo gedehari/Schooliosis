@@ -1,19 +1,24 @@
 import { prismaClient } from '$lib/server/prismaClient';
-import type { Agama, JenisKelamin } from '@prisma/client';
-import type { SiswaFormInput } from '../types';
+import type { Agama, JenisKelamin, Siswa } from '@prisma/client';
 import type { Actions, PageServerLoad } from './$types';
-import { fail } from '@sveltejs/kit';
+import { ActionFailure, fail } from '@sveltejs/kit';
+import type { LoginStatus } from '$lib/auth/types';
 
 // TODO: add proper error handler
 
+type SiswaActionReturn = { status: LoginStatus };
+
 export const load: PageServerLoad = async () => {
 	const daftarSiswa = await prismaClient.siswa.findMany({
+		include: {
+			kelas: true
+		},
 		orderBy: {
 			nis: 'desc'
 		}
 	});
 
-	const daftarKelas = await prismaClient.siswa.findMany();
+	const daftarKelas = await prismaClient.kelas.findMany();
 
 	return {
 		daftarSiswa,
@@ -22,54 +27,33 @@ export const load: PageServerLoad = async () => {
 };
 
 export const actions: Actions = {
-	upsert: async ({ request }) => {
+	upsert: async ({ request }): Promise<ActionFailure<SiswaActionReturn> | SiswaActionReturn> => {
 		const data = await request.formData();
-		const form: SiswaFormInput = {
-			nis: data.get('nis')?.toString() || '',
+		const form: Partial<Siswa> = {
+			nis: parseInt(data.get('nis')?.toString() || ''),
 			nama: data.get('nama')?.toString() || '',
 			tempatLahir: data.get('tempatLahir')?.toString() || '',
-			tanggalLahir: data.get('tanggalLahir')?.toString() || '',
-			jenisKelamin: data.get('jenisKelamin')?.toString() || '',
-			agama: data.get('agama')?.toString() || '',
+			tanggalLahir: new Date(data.get('tanggalLahir')?.toString() || ''),
+			jenisKelamin: data.get('jenisKelamin')?.toString() as JenisKelamin | undefined,
+			agama: data.get('agama')?.toString() as Agama | undefined,
 			alamat: data.get('alamat')?.toString() || '',
 			namaAyah: data.get('namaAyah')?.toString() || '',
 			pekerjaanAyah: data.get('pekerjaanAyah')?.toString() || '',
 			namaIbu: data.get('namaIbu')?.toString() || '',
 			pekerjaanIbu: data.get('pekerjaanIbu')?.toString() || '',
-			kelasId: data.get('kelasId')?.toString() || ''
+			kelasId: parseInt(data.get('kelasId')?.toString() || '') || undefined
 		};
 
 		const siswa = await prismaClient.siswa.upsert({
 			where: {
-				nis: parseInt(form.nis)
+				nis: form.nis
 			},
 			update: {
-				nis: parseInt(form.nis),
-				nama: form.nama,
-				tempatLahir: form.tempatLahir,
-				tanggalLahir: form.tanggalLahir,
-				jenisKelamin: form.jenisKelamin as JenisKelamin,
-				agama: form.agama as Agama,
-				alamat: form.alamat,
-				namaAyah: form.namaAyah,
-				pekerjaanAyah: form.pekerjaanAyah,
-				namaIbu: form.namaIbu,
-				pekerjaanIbu: form.pekerjaanIbu,
-				kelasId: parseInt(form.kelasId)
+				...form,
+				nis: undefined
 			},
 			create: {
-				nis: parseInt(form.nis),
-				nama: form.nama,
-				tempatLahir: form.tempatLahir,
-				tanggalLahir: form.tanggalLahir,
-				jenisKelamin: form.jenisKelamin as JenisKelamin,
-				agama: form.agama as Agama,
-				alamat: form.alamat,
-				namaAyah: form.namaAyah,
-				pekerjaanAyah: form.pekerjaanAyah,
-				namaIbu: form.namaIbu,
-				pekerjaanIbu: form.pekerjaanIbu,
-				kelasId: parseInt(form.kelasId)
+				...(form as Required<Siswa>)
 			}
 		});
 
@@ -79,9 +63,20 @@ export const actions: Actions = {
 
 		return { status: 'Ok' };
 	},
-	delete: async ({ request }) => {
+
+	delete: async ({ request }): Promise<ActionFailure<SiswaActionReturn> | SiswaActionReturn> => {
 		const data = await request.formData();
 		const nis = parseInt(data.get('nis')?.toString() || '');
+
+		const deletedSiswa = await prismaClient.siswa.delete({
+			where: {
+				nis
+			}
+		});
+
+		if (!deletedSiswa) {
+			return fail(500, { status: 'ServerError' });
+		}
 
 		return { status: 'Ok' };
 	}
