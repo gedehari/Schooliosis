@@ -3,7 +3,16 @@
 	import type { PageData } from './$types';
 
 	export let data: PageData;
-	const { schedules } = data;
+	let { schedules } = data.streamed;
 </script>
 
-<JadwalDisplay {schedules} />
+<JadwalDisplay schedulesPromise={schedules} />
+<!-- 
+{#await schedules}
+	<p>loading</p>
+{:then value}
+	<JadwalDisplay {schedules} />
+	<p>yay</p>
+{:catch error}
+	<p>{error}</p>
+{/await} -->
