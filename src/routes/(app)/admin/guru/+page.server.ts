@@ -44,7 +44,7 @@ export const actions: Actions = {
 			mataPelajaranId: parseInt(data.get('mataPelajaranId')?.toString() || '') || undefined
 		};
 
-		const siswa = await prismaClient.guru.upsert({
+		const guru = await prismaClient.guru.upsert({
 			where: {
 				nik: form.nik
 			},
@@ -57,7 +57,7 @@ export const actions: Actions = {
 			}
 		});
 
-		if (!siswa) {
+		if (!guru) {
 			return fail(500, { status: 'ServerError' });
 		}
 

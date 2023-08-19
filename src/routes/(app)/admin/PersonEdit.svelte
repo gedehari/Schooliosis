@@ -102,7 +102,7 @@
 </script>
 
 <div class="box bg-white shadow">
-	<button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#siswaModal" on:click={() => addPerson()}>
+	<button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#PersonModal" on:click={() => addPerson()}>
 		<i class="bi bi-plus" /> Tambah
 	</button>
 	<div class="table-responsive">
@@ -133,14 +133,20 @@
 				{#each daftarIndividu as person, i}
 					<tr>
 						<td>
-							<button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#siswaModal" on:click={() => editPerson(i)}>
+							<button
+								type="button"
+								class="btn btn-primary btn-sm"
+								data-bs-toggle="modal"
+								data-bs-target="#PersonModal"
+								on:click={() => editPerson(i)}
+							>
 								<i class="bi bi-pencil-fill" />
 							</button>
 							<button
 								type="button"
 								class="btn btn-danger btn-sm"
 								data-bs-toggle="modal"
-								data-bs-target="#deleteSiswaModal"
+								data-bs-target="#deletePersonModal"
 								on:click={() => selectPerson(i)}
 							>
 								<i class="bi bi-trash-fill" />
@@ -181,7 +187,7 @@
 <form method="post" action="?/upsert">
 	<div
 		class="modal fade"
-		id="siswaModal"
+		id="PersonModal"
 		data-bs-backdrop="static"
 		data-bs-keyboard="false"
 		tabindex="-1"
@@ -373,7 +379,7 @@
 
 <div
 	class="modal fade"
-	id="deleteSiswaModal"
+	id="deletePersonModal"
 	data-bs-backdrop="static"
 	data-bs-keyboard="false"
 	tabindex="-1"
@@ -391,7 +397,11 @@
 			</div>
 			<div class="modal-footer">
 				<form method="post" action="?/delete">
-					<input type="hidden" name="nis" bind:value={currentPerson.nis} />
+					{#if identityType == 'Siswa'}
+						<input type="hidden" name="nis" bind:value={currentPerson.nis} />
+					{:else if identityType == 'Guru'}
+						<input type="hidden" name="nik" bind:value={currentPerson.nik} />
+					{/if}
 					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tidak</button>
 					<button type="submit" class="btn btn-danger">Iya</button>
 				</form>
